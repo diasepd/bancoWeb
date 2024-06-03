@@ -1,29 +1,47 @@
 package br.ada.caixa.entity;
 
 import br.ada.caixa.enums.StatusCliente;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name="tipo_pessoa", discriminatorType = DiscriminatorType.STRING, length = 10)
-public abstract class Cliente {
+public class Cliente {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private UUID id;
+
+    @Column(unique = true, nullable = false)
     private String documento;
 
+    @Column(nullable = false)
+    private String nome;
+
+    @Column(nullable = false)
+    private LocalDate dataNascimento;
+
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private StatusCliente status;
 
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
-    private List<Conta> contas;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TipoCliente tipo;
 
-    @Transient
-    public abstract String getTipo();
-
+    @CreationTimestamp
+    private LocalDate createdAt;
 }

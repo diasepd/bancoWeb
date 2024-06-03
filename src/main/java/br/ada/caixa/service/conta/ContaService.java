@@ -1,29 +1,28 @@
 package br.ada.caixa.service.conta;
 
-import br.ada.caixa.entity.ContaPoupanca;
+import br.ada.caixa.entity.Conta;
+import br.ada.caixa.entity.TipoConta;
 import br.ada.caixa.exceptions.ValidacaoException;
 import br.ada.caixa.respository.ClienteRepository;
 import br.ada.caixa.respository.ContaRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
 @Service
+@RequiredArgsConstructor
 public class ContaService {
 
     private final ContaRepository contaRepository;
     private final ClienteRepository clienteRepository;
 
-    public ContaService(ContaRepository contaRepository, ClienteRepository clienteRepository) {
-        this.contaRepository = contaRepository;
-        this.clienteRepository = clienteRepository;
-    }
-
-    public ContaPoupanca abrirContaPoupanca(String cpf) {
+    public Conta abrirContaPoupanca(String cpf) {
         //Regra: cliente PJ nao pode ter conta poupanca
-        return clienteRepository.findByCpf(cpf)
+        return clienteRepository.findByDocumento(cpf)
                 .map(clientePF -> {
-                    var contaPoupanca = new ContaPoupanca();
+                    var contaPoupanca = new Conta();
+                    contaPoupanca.setTipo(TipoConta.CONTA_POUPANCA);
                     contaPoupanca.setCliente(clientePF);
                     contaPoupanca.setSaldo(BigDecimal.ZERO);
                     return contaRepository.save(contaPoupanca);

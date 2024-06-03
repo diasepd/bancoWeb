@@ -11,12 +11,19 @@ import br.ada.caixa.service.operacoesbancarias.investimento.InvestimentoService;
 import br.ada.caixa.service.operacoesbancarias.saldo.SaldoService;
 import br.ada.caixa.service.operacoesbancarias.saque.SaqueService;
 import br.ada.caixa.service.operacoesbancarias.transferencia.TransferenciaService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/operacoes")
+@RequiredArgsConstructor
 public class OperacoesBancariasController {
 
     private final DepositoService depositoService;
@@ -26,28 +33,19 @@ public class OperacoesBancariasController {
     private final InvestimentoService investimentoService;
     private final ContaService contaService;
 
-    public OperacoesBancariasController(DepositoService depositoService, SaqueService saqueService, TransferenciaService transferenciaService, SaldoService saldoService, InvestimentoService investimentoService, ContaService contaService) {
-        this.depositoService = depositoService;
-        this.saqueService = saqueService;
-        this.transferenciaService = transferenciaService;
-        this.saldoService = saldoService;
-        this.investimentoService = investimentoService;
-        this.contaService = contaService;
-    }
-
-    @PostMapping("/deposito")
+    @PostMapping
     public ResponseEntity<?> depositar(@RequestBody DepositoRequestDto depositoRequestDto) {
         depositoService.depositar(depositoRequestDto.getNumeroConta(), depositoRequestDto.getValor());
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/saque")
+    @PostMapping
     public ResponseEntity<?> sacar(@RequestBody SaqueRequestDto saqueRequestDto) {
         saqueService.sacar(saqueRequestDto.getNumeroConta(), saqueRequestDto.getValor());
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/transferencia")
+    @PostMapping
     public void transferencia(@RequestBody TransferenciaRequestDto transferenciaRequestDto) {
         transferenciaService.transferir(transferenciaRequestDto.getNumeroContaOrigem(),
                 transferenciaRequestDto.getNumeroContaDestino(),
@@ -63,7 +61,8 @@ public class OperacoesBancariasController {
     }
 
     @PostMapping("/investimento")
-    public ResponseEntity<SaldoResponseDto> investir(@RequestBody InvestimentoRequestDto investimentoRequestDto) {
+    public ResponseEntity<SaldoResponseDto> investir
+            (@RequestBody InvestimentoRequestDto investimentoRequestDto) {
         var contaInvestimento = investimentoService.investir(investimentoRequestDto.getDocumentoCliente(), investimentoRequestDto.getValor());
 
         var saldoResponseDto = new SaldoResponseDto();

@@ -1,7 +1,7 @@
 package br.ada.caixa.service.operacoesbancarias.saque;
 
-import br.ada.caixa.entity.ClientePJ;
 import br.ada.caixa.entity.Conta;
+import br.ada.caixa.entity.TipoCliente;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ public class OperacaoSaqueSaldoPJ implements OperacaoSaque {
     @Override
     public void executar(Conta conta, BigDecimal valorSaque) {
 
-        if (!(conta.getCliente() instanceof ClientePJ)) {
+        if (!(conta.getCliente().getTipo().equals(TipoCliente.PJ))) {
             return;
         }
 

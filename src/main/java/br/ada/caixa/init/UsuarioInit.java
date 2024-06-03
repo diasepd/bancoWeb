@@ -24,7 +24,7 @@ public class UsuarioInit implements InitializingBean {
     public void afterPropertiesSet() {
 
         if (usuarioRepository.count() == 0) {
-            var usuario = new Usuario();
+            final var usuario = new Usuario();
             usuario.setEmail("admin@test.com");
             usuario.setNome("User admin");
             usuario.setSenha(passwordEncoder.encode("12345"));

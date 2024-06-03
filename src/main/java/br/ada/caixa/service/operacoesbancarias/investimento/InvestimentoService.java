@@ -1,9 +1,9 @@
 package br.ada.caixa.service.operacoesbancarias.investimento;
 
 import br.ada.caixa.entity.Cliente;
-import br.ada.caixa.entity.ClientePF;
-import br.ada.caixa.entity.ClientePJ;
-import br.ada.caixa.entity.ContaInvestimento;
+import br.ada.caixa.entity.Conta;
+import br.ada.caixa.entity.TipoCliente;
+import br.ada.caixa.entity.TipoConta;
 import br.ada.caixa.exceptions.ValidacaoException;
 import br.ada.caixa.respository.ClienteRepository;
 import br.ada.caixa.respository.ContaRepository;
@@ -30,23 +30,30 @@ public class InvestimentoService {
         this.clienteRepository = clienteRepository;
     }
 
-    public ContaInvestimento investir(String documentoCliente, BigDecimal valor) {
-        var contaInvestimento = contaRepository.findContaInvestimentoPorCliente(documentoCliente)
-                .orElseGet(() -> {
-                    var contaInvestimentoNova = new ContaInvestimento();
-                    contaInvestimentoNova.setCliente(clienteRepository.findById(documentoCliente).get());
-                    contaInvestimentoNova.setSaldo(BigDecimal.ZERO);
-                    return contaRepository.save(contaInvestimentoNova);
-                });
+    public Conta investir(String documentoCliente, BigDecimal valor) {
+        var cliente = clienteRepository.findByDocumento(documentoCliente);
+        var contas = contaRepository.findContasByClienteAndTipo(cliente.get(), TipoConta.CONTA_INVESTIMENTO);
+        if (contas.size() > 1) {
+            throw new ValidacaoException("Cliente possui mais de uma conta investimento");
+        }
+        Conta contaInvestimento;
+        if (contas.size() == 0) {
+            contaInvestimento = new Conta();
+            contaInvestimento.setTipo(TipoConta.CONTA_INVESTIMENTO);
+            contaInvestimento.setCliente(cliente.get());
+            contaInvestimento.setSaldo(BigDecimal.ZERO);
+        } else {
+            contaInvestimento = contas.get(0);
+        }
 
-        getOperacaoTipoCliente(contaInvestimento.getCliente()).executar(contaInvestimento, valor);
+        getOperacaoTipoCliente(cliente.get()).executar(contaInvestimento, valor);
         return contaRepository.save(contaInvestimento);
     }
 
     private InvestimentoOperacao getOperacaoTipoCliente(Cliente cliente) {
-        if (cliente instanceof ClientePF) {
+        if (cliente.getTipo().equals(TipoCliente.PF)) {
             return investimentoOperacaoPF;
-        } else if (cliente instanceof ClientePJ) {
+        } else if (cliente.getTipo().equals(TipoCliente.PJ)) {
             return investimentoOperacaoPJ;
         } else {
             throw new ValidacaoException("Operacao investimento nao encontrada!");
