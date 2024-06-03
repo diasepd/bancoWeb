@@ -1,0 +1,18 @@
+package br.ada.caixa.respository;
+
+import br.ada.caixa.entity.Conta;
+import br.ada.caixa.entity.ContaInvestimento;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface ContaRepository extends JpaRepository<Conta, Long> {
+
+    @Query("select ci from ContaInvestimento ci where ci.cliente.documento = :documentoCliente ")
+    Optional<ContaInvestimento> findContaInvestimentoPorCliente(@Param("documentoCliente") String documentoCliente);
+
+}
