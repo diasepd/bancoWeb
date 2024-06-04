@@ -33,19 +33,19 @@ public class OperacoesBancariasController {
     private final InvestimentoService investimentoService;
     private final ContaService contaService;
 
-    @PostMapping
-    public ResponseEntity<?> depositar(@RequestBody DepositoRequestDto depositoRequestDto) {
+    @PostMapping("/depositar")
+    public ResponseEntity<Void> depositar(@RequestBody DepositoRequestDto depositoRequestDto) {
         depositoService.depositar(depositoRequestDto.getNumeroConta(), depositoRequestDto.getValor());
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping
-    public ResponseEntity<?> sacar(@RequestBody SaqueRequestDto saqueRequestDto) {
+    @PostMapping("/sacar")
+    public ResponseEntity<Void> sacar(@RequestBody SaqueRequestDto saqueRequestDto) {
         saqueService.sacar(saqueRequestDto.getNumeroConta(), saqueRequestDto.getValor());
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping
+    @PostMapping("/transferir")
     public void transferencia(@RequestBody TransferenciaRequestDto transferenciaRequestDto) {
         transferenciaService.transferir(transferenciaRequestDto.getNumeroContaOrigem(),
                 transferenciaRequestDto.getNumeroContaDestino(),

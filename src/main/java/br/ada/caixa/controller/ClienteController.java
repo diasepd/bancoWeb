@@ -37,13 +37,13 @@ public class ClienteController {
         }
     }
 
-    @PostMapping
+    @PostMapping("/pf")
     public ResponseEntity<RegistrarClienteResponseDto> registrarPF(@RequestBody RegistrarClientePFRequestDto clienteDto) {
         var response = clienteService.registrarPF(clienteDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PostMapping
+    @PostMapping("/pj")
     public ResponseEntity<RegistrarClienteResponseDto> registrarPJ(@RequestBody RegistrarClientePJRequestDto clienteDto) {
         var response = clienteService.registrarPJ(clienteDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
