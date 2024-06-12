@@ -10,10 +10,13 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface ContaRepository extends JpaRepository<Conta, Long> {
+public interface ContaRepository extends JpaRepository<Conta, UUID> {
 
     List<Conta> findContasByClienteAndTipo(Cliente cliente, TipoConta tipoConta);
+
+    Optional<Conta> findByNumero(Long numero);
 
 }

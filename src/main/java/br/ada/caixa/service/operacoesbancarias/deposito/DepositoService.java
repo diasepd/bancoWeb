@@ -16,7 +16,7 @@ public class DepositoService {
     }
 
     public void depositar(Long numeroConta, BigDecimal valor) {
-        contaRepository.findById(numeroConta)
+        contaRepository.findByNumero(numeroConta)
                 .ifPresentOrElse(conta -> {
                     conta.setSaldo(conta.getSaldo().add(valor));
                     contaRepository.save(conta);

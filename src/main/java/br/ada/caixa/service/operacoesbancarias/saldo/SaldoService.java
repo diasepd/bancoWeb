@@ -17,7 +17,7 @@ public class SaldoService {
     }
 
     public BigDecimal consultarSaldo(Long numeroConta) {
-        return contaRepository.findById(numeroConta)
+        return contaRepository.findByNumero(numeroConta)
                 .map(Conta::getSaldo)
                 .orElseThrow(() -> new ValidacaoException("Conta inexistente!"));
     }

@@ -19,12 +19,11 @@ public class SaqueService {
     }
 
     public void sacar(Long numeroConta, BigDecimal valor) {
-        contaRepository.findById(numeroConta)
+        contaRepository.findByNumero(numeroConta)
                         .ifPresent(conta -> {
                             operacaoSaqueList.forEach(operacaoSaque -> operacaoSaque.executar(conta, valor));
                             contaRepository.save(conta);
                         });
-
     }
 
 }
