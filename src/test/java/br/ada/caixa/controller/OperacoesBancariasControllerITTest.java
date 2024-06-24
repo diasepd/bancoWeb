@@ -29,11 +29,15 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -147,7 +151,7 @@ class OperacoesBancariasControllerITTest {
     }
 
     @Test
-    void transferencia() {
+    void transferirTest() {
         //given
         final var valor = BigDecimal.valueOf(2.00);
         final var numeroContaOrigem = 2L;
@@ -169,11 +173,23 @@ class OperacoesBancariasControllerITTest {
     }
 
     @Test
-    void consultarSaldo() {
+    void saldoNumeroContaTest() {
+        given(contaRepository.findByNumero(2L))
+                .willReturn(Optional.of(new Conta()));
+
+        ResponseEntity<Conta> response = restTemplate.getForEntity("/saldo/2", Conta.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().equals(new Pet(42, "Marley", "Wesley")));//        SaldoResponseDto saldoResponseDto = SaldoResponseDto.builder()
+//                .numeroConta(2L)
+//                .saldo(BigDecimal.valueOf(2.00))
+//                .build();
+//        //when
+//        var response = restTemplate.getForEntity(url + "/saldo/{numeroConta}", String.class, saldoResponseDto);
     }
 
     @Test
-    void investir() {
+    void investimentoTest() {
         //given
         final var valor = BigDecimal.valueOf(2.00);
         final var documentoCliente = "1234567891";

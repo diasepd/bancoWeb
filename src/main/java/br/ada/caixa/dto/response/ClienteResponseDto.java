@@ -1,13 +1,12 @@
 package br.ada.caixa.dto.response;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ClienteResponseDto {
-
     private String documento;
     private String tipo;
-
 }

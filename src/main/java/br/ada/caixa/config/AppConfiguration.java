@@ -5,17 +5,14 @@ import br.ada.caixa.dto.request.RegistrarClientePJRequestDto;
 import br.ada.caixa.dto.response.ClientePFResponseDto;
 import br.ada.caixa.dto.response.ClientePJResponseDto;
 import br.ada.caixa.entity.Cliente;
-import br.ada.caixa.entity.TipoCliente;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class AppConfiguration {
-
     @Bean
     public ModelMapper getModelMapper() {
-
         var modelMapper = new ModelMapper();
 
         modelMapper.typeMap(RegistrarClientePFRequestDto.class, Cliente.class)
@@ -32,5 +29,4 @@ public class AppConfiguration {
 
         return modelMapper;
     }
-
 }

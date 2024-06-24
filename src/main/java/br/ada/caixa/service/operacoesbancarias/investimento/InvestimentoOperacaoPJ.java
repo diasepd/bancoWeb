@@ -2,12 +2,10 @@ package br.ada.caixa.service.operacoesbancarias.investimento;
 
 import br.ada.caixa.entity.Conta;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 
 @Service("investimentoOperacaoPJ")
 public class InvestimentoOperacaoPJ implements InvestimentoOperacao {
-
     private static final BigDecimal RENDIMENTO_INVESTIMENTO = BigDecimal.valueOf(1.02);
 
     @Override

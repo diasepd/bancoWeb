@@ -7,13 +7,11 @@ import br.ada.caixa.respository.ClienteRepository;
 import br.ada.caixa.respository.ContaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
 public class ContaService {
-
     private final ContaRepository contaRepository;
     private final ClienteRepository clienteRepository;
 

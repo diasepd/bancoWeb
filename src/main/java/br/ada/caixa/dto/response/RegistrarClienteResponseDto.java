@@ -6,12 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class RegistrarClienteResponseDto {
-
     private String documento;
     private SaldoResponseDto saldoResponseDto;
-
 }

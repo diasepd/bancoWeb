@@ -10,18 +10,15 @@ import br.ada.caixa.respository.ContaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
 public class InvestimentoService {
-
     @Qualifier("investimentoOperacaoPF")
     private final InvestimentoOperacao investimentoOperacaoPF;
     @Qualifier("investimentoOperacaoPJ")
     private final InvestimentoOperacao investimentoOperacaoPJ;
-
     private final ContaRepository contaRepository;
     private final ClienteRepository clienteRepository;
 
@@ -37,7 +34,6 @@ public class InvestimentoService {
         var contas =
                 contaRepository
                         .findContasByClienteAndTipo(cliente, TipoConta.CONTA_INVESTIMENTO);
-
         if (contas.size() > 1) {
             throw new ValidacaoException("Cliente possui mais de uma conta investimento");
         }

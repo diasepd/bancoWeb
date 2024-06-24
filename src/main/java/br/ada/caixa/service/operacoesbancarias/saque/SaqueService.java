@@ -1,15 +1,12 @@
 package br.ada.caixa.service.operacoesbancarias.saque;
 
-
 import br.ada.caixa.respository.ContaRepository;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.util.List;
 
 @Service
 public class SaqueService {
-
     private final ContaRepository contaRepository;
     private final List<OperacaoSaque> operacaoSaqueList;
 
@@ -25,5 +22,4 @@ public class SaqueService {
                             contaRepository.save(conta);
                         });
     }
-
 }
