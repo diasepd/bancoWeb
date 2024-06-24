@@ -62,5 +62,4 @@ public class InvestimentoService {
             throw new ValidacaoException("Operacao investimento nao encontrada!");
         }
     }
-
 }

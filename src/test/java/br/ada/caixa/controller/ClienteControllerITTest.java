@@ -10,41 +10,30 @@ import br.ada.caixa.enums.StatusCliente;
 import br.ada.caixa.respository.ClienteRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
-
-import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ClienteControllerITTest {
-
     @LocalServerPort
     private int port;
-
     @Autowired
     private TestRestTemplate restTemplate;
-
     @Autowired
     private ClienteRepository repository;
-
     private String url;
-
 
     @BeforeEach
     void setup() {
-
         url = "http://localhost:" + port + "/clientes";
-
         var cliente1 = Cliente.builder()
                 .documento("123456889")
                 .nome("Teste 1")
@@ -73,10 +62,7 @@ class ClienteControllerITTest {
     }
 
     @AfterEach
-    void tearDown() {
-        repository.deleteAllInBatch();
-
-    }
+    void tearDown() { repository.deleteAllInBatch(); }
 
     @Test
     void getAllTest() {
@@ -86,7 +72,6 @@ class ClienteControllerITTest {
         // when
         var response =
                 restTemplate.getForEntity(url, ClienteResponseDto[].class);
-
         // then
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expected, response.getBody().length);
@@ -104,13 +89,11 @@ class ClienteControllerITTest {
                         .nome(nome)
                         .dataNascimento(dataNascimento)
                         .build();
-
         // when
         var response =
                 restTemplate.postForEntity(url + "/pf",
                                            clienteDto,
                                            RegistrarClienteResponseDto.class);
-
         // then
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
@@ -122,7 +105,7 @@ class ClienteControllerITTest {
     }
 
     @Test
-    @Disabled
+//    @Disabled
     void postPJTest() {
         // given
         final var cnpj = "1234";
@@ -134,13 +117,11 @@ class ClienteControllerITTest {
                         .nomeFantasia(nomeFantasia)
                         .razaoSocial(razaoSocial)
                         .build();
-
         // when
         var response =
                 restTemplate.postForEntity(url + "/pj",
                                            clienteDto,
                                            RegistrarClienteResponseDto.class);
-
         // then
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
@@ -150,14 +131,4 @@ class ClienteControllerITTest {
         final var entity = repository.findByDocumento(cnpj);
         assertEquals(nomeFantasia, entity.get().getNome());
     }
-
-
-
-
-
-
-
-
-
-
 }

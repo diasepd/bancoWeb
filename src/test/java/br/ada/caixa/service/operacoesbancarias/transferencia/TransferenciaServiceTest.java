@@ -17,23 +17,18 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 class TransferenciaServiceTest {
-
     private final Random random = new Random();
     private final Long numeroContaOrigem  = random.nextLong();
     private final Long numeroContaDestino = random.nextLong();
     private final BigDecimal valor = new BigDecimal(random.nextDouble()).setScale(2, RoundingMode.HALF_UP);
-
-
     private SaqueService saqueService = mock(SaqueService.class);
     private DepositoService depositoService = mock(DepositoService.class);
-
     private TransferenciaService service =
             new TransferenciaService(saqueService, depositoService);
 
     @Test
     void transferirTest() {
-        // given
-        // when
+        // given // when
         service.transferir(numeroContaOrigem, numeroContaDestino, valor);
 
         // then
@@ -43,7 +38,6 @@ class TransferenciaServiceTest {
                 .depositar(numeroContaDestino, valor);
     }
 
-
     @Test
     void transferirSaqueFailsTest() {
         // given
@@ -51,8 +45,7 @@ class TransferenciaServiceTest {
                 .when(saqueService)
                 .sacar(numeroContaOrigem, valor);
 
-        // when
-        // then
+        // when // then
         assertThrows(RuntimeException.class,
                      () -> service.transferir(numeroContaOrigem, numeroContaDestino, valor));
         verify(saqueService, atMostOnce())
@@ -60,5 +53,4 @@ class TransferenciaServiceTest {
         verify(depositoService, never())
                 .depositar(numeroContaDestino, valor);
     }
-
 }

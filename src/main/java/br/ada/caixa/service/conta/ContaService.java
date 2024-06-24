@@ -29,5 +29,4 @@ public class ContaService {
                 })
                 .orElseThrow(() -> new ValidacaoException("Cliente nao encontrado com o CPF informado!"));
     }
-
 }

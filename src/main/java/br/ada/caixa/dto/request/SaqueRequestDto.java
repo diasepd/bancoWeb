@@ -1,15 +1,21 @@
 package br.ada.caixa.dto.request;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@Builder
+@NoArgsConstructor
 public class SaqueRequestDto {
-
+    @NotNull
     private Long numeroConta;
+    @NotNull
     private BigDecimal valor;
 
     @Override

@@ -27,7 +27,6 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class InvestimentoServiceTest {
-
     @Mock
     private InvestimentoOperacao investimentoOperacaoPF;
     @Mock
@@ -36,7 +35,6 @@ class InvestimentoServiceTest {
     private ContaRepository contaRepository;
     @Mock
     private ClienteRepository clienteRepository;
-
     @InjectMocks
     private InvestimentoService service;
 
@@ -48,7 +46,6 @@ class InvestimentoServiceTest {
         // given
         final Conta expected = mock(Conta.class);
         final Cliente cliente = mock(Cliente.class);
-
         final Random random = new Random();
         final String documentoCliente = "some document";
         final BigDecimal valor =
@@ -56,19 +53,15 @@ class InvestimentoServiceTest {
                         .valueOf(random.nextDouble())
                         .setScale(2, RoundingMode.HALF_UP);
 
-
         given(clienteRepository.findByDocumento(documentoCliente))
                 .willReturn(Optional.of(cliente));
-
         given(contaRepository
                       .findContasByClienteAndTipo(cliente, TipoConta.CONTA_INVESTIMENTO))
                 .willReturn(List.of(expected));
         given(contaRepository.save(expected))
                 .willReturn(expected);
-
         given(cliente.getTipo())
                 .willReturn(TipoCliente.PF);
-
         // when
         Conta actual = service.investir(documentoCliente, valor);
 
@@ -77,7 +70,6 @@ class InvestimentoServiceTest {
         verify(investimentoOperacaoPF, times(1)).executar(actual, valor);
         verify(contaRepository, times(1)).save(actual);
     }
-
     /*
     1 - Variacao qdo o cliente nao é encontrado
     2 - Testar qdo o cliente tem + de 1 conta investimento ?

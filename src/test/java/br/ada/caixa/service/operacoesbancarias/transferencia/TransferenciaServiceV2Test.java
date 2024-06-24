@@ -22,7 +22,6 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class TransferenciaServiceV2Test {
-
     private final Random random = new Random();
     private final Long numeroContaOrigem  = random.nextLong();
     private final Long numeroContaDestino = random.nextLong();
@@ -32,14 +31,12 @@ class TransferenciaServiceV2Test {
     private SaqueService saqueService;
     @Mock
     private DepositoService depositoService;
-
     @InjectMocks
     private TransferenciaService service;
 
     @Test
     void transferirTest() {
-        // given
-        // when
+        // given // when
         service.transferir(numeroContaOrigem, numeroContaDestino, valor);
 
         // then
@@ -49,16 +46,13 @@ class TransferenciaServiceV2Test {
                 .depositar(numeroContaDestino, valor);
     }
 
-
     @Test
     void transferirSaqueFailsTest() {
         // given
         doThrow(new RuntimeException("ERRO NO SAQUE"))
                 .when(saqueService)
                 .sacar(numeroContaOrigem, valor);
-
-        // when
-        // then
+        // when // then
         assertThrows(RuntimeException.class,
                      () -> service.transferir(numeroContaOrigem, numeroContaDestino, valor));
         verify(saqueService, atMostOnce())
@@ -66,5 +60,4 @@ class TransferenciaServiceV2Test {
         verify(depositoService, never())
                 .depositar(numeroContaDestino, valor);
     }
-
 }

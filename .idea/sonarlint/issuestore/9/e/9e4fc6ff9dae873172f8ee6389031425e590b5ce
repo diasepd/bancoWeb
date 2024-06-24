@@ -1,0 +1,19 @@
+
+v
+java:S2699¬"-Add at least one assertion to this test case.(ªÊ›Àùÿÿÿÿ8þ„Þ»„2J$a89c873b-2380-4b1f-bd30-3ee6d16d2283
+v
+java:S2699°"-Add at least one assertion to this test case.(úŸ™åùÿÿÿÿ8ƒÉš¼„2J$71a683dd-be25-4b44-bafd-6ef7927a1a40
+v
+java:S2699Ä"-Add at least one assertion to this test case.(äê¬²ùÿÿÿÿ8ÿ„Þ»„2J$dde4aec4-7db3-4651-8e92-71003f20e992
+
+java:S5838">Use assertThat(actual).isEqualByComparingTo(expected) instead.(œÔ½˜8™…Þ»„2J$8f1a9ceb-255c-488b-844f-ecd36aabcd66
+‚
+java:S5838¦">Use assertThat(actual).isEqualByComparingTo(expected) instead.(Íæ÷¢8›…Þ»„2J$f0265070-b847-45a0-96c8-a56943302212
+„	java:S125§"<This block of commented-out lines of code should be removed.(¤à¾Óÿÿÿÿÿ8œ…Þ»„2J$d3707b13-302e-452c-a6d6-af28ebf7da6d
+€
+java:S1854º"<Remove this useless assignment to local variable "response".(·ƒ¶¿8Ôñð»„2J$ae285eac-f5f9-4a91-9c5d-2026f57115e7
+q
+java:S1481º"-Remove this unused "response" local variable.(·ƒ¶¿8Ôñð»„2J$a99e4872-0286-45b9-8019-73f7b49d3a3d
+	java:S125¼"<This block of commented-out lines of code should be removed.(æœÜÛ8‰àë»„2J$d16ea72d-2eab-4552-b856-1992fac99cde
+’
+java:S1128$"JRemove this unused import 'org.junit.jupiter.api.Assertions.assertEquals'.(ÚÈˆòÿÿÿÿÿ8ˆÉš¼„2J$1e9d0524-46f9-4b9a-a3bd-86af939799df

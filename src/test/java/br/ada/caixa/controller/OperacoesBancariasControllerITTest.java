@@ -1,6 +1,9 @@
 package br.ada.caixa.controller;
 
 import br.ada.caixa.dto.request.DepositoRequestDto;
+import br.ada.caixa.dto.request.InvestimentoRequestDto;
+import br.ada.caixa.dto.request.SaqueRequestDto;
+import br.ada.caixa.dto.request.TransferenciaRequestDto;
 import br.ada.caixa.entity.Cliente;
 import br.ada.caixa.entity.Conta;
 import br.ada.caixa.entity.TipoCliente;
@@ -22,16 +25,13 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -39,18 +39,14 @@ import static org.mockito.ArgumentMatchers.any;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith(MockitoExtension.class)
 class OperacoesBancariasControllerITTest {
-
     @LocalServerPort
     private int port;
-
     @Autowired
     private TestRestTemplate restTemplate;
-
     @SpyBean
     private ContaRepository contaRepository;
     @Autowired
     private ClienteRepository clienteRepository;
-
     @Autowired
     DepositoService depositoService;
     @Autowired
@@ -63,14 +59,12 @@ class OperacoesBancariasControllerITTest {
     InvestimentoService investimentoService;
     @Autowired
     ContaService contaService;
-
     private String url;
 
     @BeforeEach
     void setUp() {
         //SET URL
         url = "http://localhost:" + port + "/operacoes";
-
         //CRIAR CLIENTES
         var cliente1 = Cliente.builder()
                 .documento("123456889")
@@ -88,9 +82,7 @@ class OperacoesBancariasControllerITTest {
                 .tipo(TipoCliente.PF)
                 .createdAt(LocalDate.now())
                 .build();
-
         clienteRepository.saveAllAndFlush(List.of(cliente1, cliente2));
-
         //CRIAR CONTAS
         var contaCorrente1 = Conta.builder()
                 .numero(1L)
@@ -100,18 +92,15 @@ class OperacoesBancariasControllerITTest {
                 .cliente(cliente1)
                 .createdAt(LocalDate.now())
                 .build();
-
         var contaCorrente2 = Conta.builder()
                 .numero(2L)
-                .saldo(BigDecimal.ZERO)
+                .saldo(BigDecimal.valueOf(2.00))
                 .tipo(TipoConta.CONTA_CORRENTE)
 //                .cliente(clienteRepository.findByDocumento(cliente2.getDocumento()).get())
                 .cliente(cliente2)
                 .createdAt(LocalDate.now())
                 .build();
-
         contaRepository.saveAllAndFlush(List.of(contaCorrente1, contaCorrente2));
-
     }
 
     @AfterEach
@@ -123,7 +112,7 @@ class OperacoesBancariasControllerITTest {
     @Test
     void depositarTest() {
         //given
-        final var valor = BigDecimal.valueOf(100.50);
+        final var valor = BigDecimal.valueOf(2.00);
         final var numeroConta = 1L;
         DepositoRequestDto depositoRequestDto =
                 DepositoRequestDto.builder()
@@ -134,20 +123,49 @@ class OperacoesBancariasControllerITTest {
         var response = restTemplate.postForEntity(url + "/depositar", depositoRequestDto, Void.class);
 
         //then
-        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(valor.compareTo(contaRepository.findByNumero(numeroConta).get().getSaldo())).isZero();
-        assertEquals(0, valor.compareTo(contaRepository.findByNumero(numeroConta).get().getSaldo()));
-
         Mockito.verify(contaRepository).save(any(Conta.class));
     }
 
     @Test
-    void sacar() {
+    void sacarTest() {
+        //given
+        final var valor = BigDecimal.valueOf(2.00);
+        final var numeroConta = 2L;
+        SaqueRequestDto saqueRequestDto =
+                SaqueRequestDto.builder()
+                        .numeroConta(numeroConta)
+                        .valor(valor)
+                        .build();
+        //when
+        var response = restTemplate.postForEntity(url + "/sacar", saqueRequestDto, Void.class);
+        //then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(contaRepository.findByNumero(numeroConta).get().getSaldo()).isZero();
+        Mockito.verify(contaRepository).save(any(Conta.class));
     }
 
     @Test
     void transferencia() {
+        //given
+        final var valor = BigDecimal.valueOf(2.00);
+        final var numeroContaOrigem = 2L;
+        final var numeroContaDestino = 1L;
+        TransferenciaRequestDto transferenciaRequestDto =
+                TransferenciaRequestDto.builder()
+                        .numeroContaOrigem(numeroContaOrigem)
+                        .numeroContaDestino(numeroContaDestino)
+                        .valor(valor)
+                        .build();
+        //when
+        var response = restTemplate.postForEntity(url + "/transferir", transferenciaRequestDto, Void.class);
+        //then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(contaRepository.findByNumero(numeroContaOrigem).get().getSaldo()).isZero();
+        assertThat(valor.compareTo(contaRepository.findByNumero(numeroContaDestino).get().getSaldo())).isZero();
+//        Mockito.verify(saqueService).sacar(any(Long.class), any(BigDecimal.class));
+//        Mockito.verify(depositoService).depositar(any(Long.class), any(BigDecimal.class));
     }
 
     @Test
@@ -156,6 +174,22 @@ class OperacoesBancariasControllerITTest {
 
     @Test
     void investir() {
+        //given
+        final var valor = BigDecimal.valueOf(2.00);
+        final var documentoCliente = "1234567891";
+        InvestimentoRequestDto investimentoRequestDto =
+                InvestimentoRequestDto.builder()
+                        .documentoCliente(documentoCliente)
+                        .valor(valor)
+                        .build();
+        //when
+        var response = restTemplate.postForEntity(url + "/investimento", investimentoRequestDto, Void.class);
+        //then
+//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+//        assertThat(contaRepository.findByNumero(numeroContaOrigem).get().getSaldo()).isZero();
+//        assertThat(valor.compareTo(contaRepository.findByNumero(numeroContaDestino).get().getSaldo())).isZero();
+//        Mockito.verify(saqueService).sacar(any(Long.class), any(BigDecimal.class));
+//        Mockito.verify(depositoService).depositar(any(Long.class), any(BigDecimal.class));
     }
 
     @Test
